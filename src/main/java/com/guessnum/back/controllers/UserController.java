@@ -1,5 +1,8 @@
 package com.guessnum.back.controllers;
 
+import javax.persistence.Table;
+
+import com.guessnum.back.entities.Play;
 import com.guessnum.back.entities.User;
 import com.guessnum.back.repositories.UserRepository;
 
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
+@Table(name = "user")
 @RequestMapping(path = "/users")
 public class UserController {
   @Autowired
@@ -20,8 +24,12 @@ public class UserController {
   @PostMapping(path = "/new")
   public @ResponseBody String createNewUser(@RequestParam("name") String name) {
     User user = new User();
+    Play play = new Play();
 
+    
     user.setName(name);
+    play.setUserId(user.getId());
+    play.setPlaysCounter(0);
     if (userRepository.save(user) != null ) {
       return "Success, user created";
     }
